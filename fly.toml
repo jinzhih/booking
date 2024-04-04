@@ -1,0 +1,32 @@
+app = "nextks"
+primary_region = "syd"
+swap_size_mb = 256
+
+[build]
+dockerfile = "Dockerfile.admin"
+
+[build.args]
+DB_PROVIDER = "postgresql"
+# fly deploy --build-arg NAME=VALUE
+
+[env]
+# see README for a complete list
+KS_PORT = "3000"
+NEXT_PUBLIC_GRAPHQL_PATH = "/api/graphql"
+NEXT_PUBLIC_SERVER_URL = "https://nextks.fly.dev"
+
+[http_service]
+internal_port = 3000
+force_https = true
+auto_stop_machines = true
+auto_start_machines = true
+min_machines_running = 1
+processes = ["app"]
+
+[deploy]
+release_command = "npm run migrate"
+
+[[vm]]
+cpu_kind = "shared"
+cpus = 1
+memory_mb = 256
